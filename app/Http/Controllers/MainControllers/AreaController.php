@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MainControllers;
 
-use App\Models\ServiceCategory;
+use App\Http\Controllers\Controller;
+use App\Models\Area;
 use Illuminate\Http\Request;
 
-class ServiceCategoryController extends Controller
+class AreaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class ServiceCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ServiceCategory $serviceCategory)
+    public function show(Area $area)
     {
         //
     }
@@ -42,7 +43,7 @@ class ServiceCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ServiceCategory $serviceCategory)
+    public function edit(Area $area)
     {
         //
     }
@@ -50,7 +51,7 @@ class ServiceCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ServiceCategory $serviceCategory)
+    public function update(Request $request, Area $area)
     {
         //
     }
@@ -58,7 +59,7 @@ class ServiceCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ServiceCategory $serviceCategory)
+    public function destroy(Area $area)
     {
         //
     }

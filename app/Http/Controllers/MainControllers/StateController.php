@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MainControllers;
 
-use App\Models\OrderService;
+use App\Http\Controllers\Controller;
+use App\Models\State;
 use Illuminate\Http\Request;
 
-class OrderServiceController extends Controller
+class StateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class OrderServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OrderService $orderService)
+    public function show(State $state)
     {
         //
     }
@@ -42,7 +43,7 @@ class OrderServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(OrderService $orderService)
+    public function edit(State $state)
     {
         //
     }
@@ -50,7 +51,7 @@ class OrderServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OrderService $orderService)
+    public function update(Request $request, State $state)
     {
         //
     }
@@ -58,7 +59,7 @@ class OrderServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OrderService $orderService)
+    public function destroy(State $state)
     {
         //
     }

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MainControllers;
 
-use App\Models\Coupon;
+use App\Http\Controllers\Controller;
+
+use App\Models\OrderService;
 use Illuminate\Http\Request;
 
-class CouponController extends Controller
+class OrderServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +36,7 @@ class CouponController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Coupon $coupon)
+    public function show(OrderService $orderService)
     {
         //
     }
@@ -42,7 +44,7 @@ class CouponController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Coupon $coupon)
+    public function edit(OrderService $orderService)
     {
         //
     }
@@ -50,7 +52,7 @@ class CouponController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Coupon $coupon)
+    public function update(Request $request, OrderService $orderService)
     {
         //
     }
@@ -58,7 +60,7 @@ class CouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Coupon $coupon)
+    public function destroy(OrderService $orderService)
     {
         //
     }

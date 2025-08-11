@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MainControllers;
 
-use App\Models\UsedCoupon;
+use App\Http\Controllers\Controller;namespace App\Http\Controllers\MainControllers;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\Rating;
 use Illuminate\Http\Request;
 
-class UsedCouponController extends Controller
+class RatingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +38,7 @@ class UsedCouponController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(UsedCoupon $usedCoupon)
+    public function show(Rating $rating)
     {
         //
     }
@@ -42,7 +46,7 @@ class UsedCouponController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(UsedCoupon $usedCoupon)
+    public function edit(Rating $rating)
     {
         //
     }
@@ -50,7 +54,7 @@ class UsedCouponController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UsedCoupon $usedCoupon)
+    public function update(Request $request, Rating $rating)
     {
         //
     }
@@ -58,7 +62,7 @@ class UsedCouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UsedCoupon $usedCoupon)
+    public function destroy(Rating $rating)
     {
         //
     }
