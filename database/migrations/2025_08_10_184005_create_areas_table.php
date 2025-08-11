@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
             // unique(state_id_fk, name) بالملف relation
+              $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

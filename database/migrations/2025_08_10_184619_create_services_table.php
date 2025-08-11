@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('service_category_id_fk'); // FK بالملف relation
             $table->boolean('is_active')->default(true);
             // unique(service_category_id_fk, name) بالملف relation
+               $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

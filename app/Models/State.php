@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Traits\UUIDTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class State extends Model
 {
-    use UUIDTrait;
+    use UUIDTrait,SoftDeletes;
 
     protected $table = 'states';
     protected $keyType = 'string';

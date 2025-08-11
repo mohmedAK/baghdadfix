@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Traits\UUIDTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class UsedCoupon extends Model
 {
-    use UUIDTrait;
+    use UUIDTrait,SoftDeletes;
 
     protected $table = 'used_coupons';
     protected $keyType = 'string';

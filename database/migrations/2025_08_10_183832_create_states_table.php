@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 100)->unique();
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
+            $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

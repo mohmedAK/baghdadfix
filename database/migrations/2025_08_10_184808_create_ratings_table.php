@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('technical_id_fk');     // FK بالملف relation
             $table->integer('rate');
             $table->text('comment')->nullable();
+               $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
 
         });

@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('code', 250)->unique();
             $table->integer('discount');
             $table->boolean('is_active')->default(true);
+               $table->softDeletes(); // For soft delete functionality
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
+
         });
     }
 

@@ -50,6 +50,7 @@ return new class extends Migration
 
             $table->string('image', 1000)->nullable();
             $table->string('video', 1000)->nullable();
+               $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

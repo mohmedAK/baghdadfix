@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image', 1000)->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
+               $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

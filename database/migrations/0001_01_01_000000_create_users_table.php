@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('area', 250);  // نص كما طلبت
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->softDeletes(); // For soft delete functionality
             $table->rememberToken();
             $table->timestamps();
         });
