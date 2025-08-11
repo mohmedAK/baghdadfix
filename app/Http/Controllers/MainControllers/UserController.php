@@ -3,22 +3,30 @@
 namespace App\Http\Controllers\MainControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Requests\Auth\RegisterRequest; // تأكد من وجود هذا الـ Request
+use Illuminate\Http\JsonResponse;
 
-use App\Http\Requests\RegisterRequest;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+
+    public function index(): JsonResponse
     {
-        //
+        $users = User::all(); // أو User::paginate(10) إذا تريد تقسيم الصفحات
+
+        return response()->json([
+            'data' => $users
+        ]);
     }
 
     /**
@@ -30,64 +38,46 @@ class UserController extends Controller
     }
 
 
-    public function registerUser(Request $request)
+
+
+    public function login(LoginRequest $request)
     {
-        $v = Validator::make($request->all(), [
-            'name'     => 'required|string|max:250',
-            'email'    => 'required_without:phone|nullable|email|max:250|unique:users,email',
-            'phone'    => 'required_without:email|nullable|string|max:50|unique:users,phone',
-            'password' => 'required|string|min:6|confirmed', // اطلب password_confirmation
-            'role'     => 'required|in:admin,technical,customer',
-            'state'    => 'required|string|max:250',
-            'area'     => 'required|string|max:250',
-        ], [
-            'email.required_without' => 'email or phone is required',
-            'phone.required_without' => 'phone or email is required',
-        ]);
+        // البحث إما بالإيميل أو الهاتف
+        $user = User::query()
+            ->when($request->email, fn($q) => $q->where('email', $request->email))
+            ->when($request->phone, fn($q) => $q->where('phone', $request->phone))
+            ->first();
 
-        if ($v->fails()) {
-            return response()->json([
-                'message' => 'Validation error',
-                'errors'  => $v->errors(),
-            ], 422);
+        // التحقق من كلمة المرور
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        try {
-            return DB::transaction(function () use ($request) {
-                $user = User::create([
-                    // لو عندك UUIDTrait ما تحتاج id هنا، وإلا:
-                    // 'id'   => Str::uuid()->toString(),
-                    'name'     => $request->name,
-                    'email'    => $request->email,
-                    'phone'    => $request->phone,
-                    'role'     => $request->role,
-                    'state'    => $request->state,
-                    'area'     => $request->area,
-                    'password' => Hash::make($request->password),
-                ]);
+        // إنشاء التوكن (Passport)
+        $token = $user->createToken('api')->accessToken;
 
-                // Passport:
-                $token = $user->createToken('api')->accessToken;
-                // Sanctum (بدلاً من السطر فوق):
-                // $token = $user->createToken('api')->plainTextToken;
 
-                return response()->json([
-                    'message' => 'User registered',
-                    'user'    => $user,
-                    'token'   => $token,
-                ], 201);
-            });
-        } catch (\Throwable $e) {
-            return response()->json(['message' => 'Failed to register'], 500);
-        }
+        return response()->json([
+            'message' => 'Logged in successfully',
+            'user'    => $user,
+            'token'   => $token,
+        ], 200);
     }
 
+    public function logout()
+    {
+        // Passport: إلغاء التوكن الحالي
+        $token = auth()->user()->token();
+        $token->revoke();
+
+        return response()->json(['message' => 'Logged out successfully.']);
+    }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RegisterRequest $request)
+    public function registerUser(RegisterRequest $request)
     {
-      //  dd($request->all());
+        //dd($request->all());
         $user = DB::transaction(function () use ($request) {
             return User::create([
                 'name'     => $request->name,
@@ -104,8 +94,6 @@ class UserController extends Controller
         if ($request->expectsJson() || $request->is('api/*')) {
             // Passport:
             $token = $user->createToken('api')->accessToken;
-            // Sanctum (استبدل السطر فوق بهذا):
-            // $token = $user->createToken('api')->plainTextToken;
 
             return response()->json([
                 'message' => 'User registered',

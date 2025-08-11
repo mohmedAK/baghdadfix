@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('otp', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id_fk'); // FK بالملف relation
-            $table->string('code', 6);
-            $table->timestamp('expire_at');
-
-             // index(user_id_fk, code) بالملف relation
+       Schema::create('otps', function (Blueprint $table) {
+            $table->id()->autoIncrement()->primary();
+            $table->string('to_phone');
+            $table->string('message');
+            $table->string('status');
+            $table->string('request_id');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('otp');
+         Schema::dropIfExists('otps');
     }
 };

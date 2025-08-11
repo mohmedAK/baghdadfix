@@ -16,13 +16,7 @@ return new class extends Migration {
             $table->unique(['state_id_fk','name'], 'uq_area_state_name');
         });
 
-        // otp ⇢ user
-        Schema::table('otp', function (Blueprint $table) {
-            $table->foreign('user_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->index(['user_id_fk','code'], 'idx_otp_user_code');
-        });
 
         // service ⇢ service_category
         Schema::table('services', function (Blueprint $table) {
@@ -118,10 +112,7 @@ return new class extends Migration {
             $table->dropForeign(['service_category_id_fk']);
         });
 
-        Schema::table('otp', function (Blueprint $table) {
-            $table->dropIndex('idx_otp_user_code');
-            $table->dropForeign(['user_id_fk']);
-        });
+
 
         Schema::table('areas', function (Blueprint $table) {
             $table->dropUnique('uq_area_state_name');
