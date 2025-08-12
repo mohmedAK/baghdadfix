@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\Auth\RegisterRequest; // تأكد من وجود هذا الـ Request
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -40,8 +40,32 @@ class UserController extends Controller
 
 
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        $validator = Validator::make(
+        $request->all(),
+        [
+            'email'    => 'required_without:phone|nullable|email|max:250',
+            'phone'    => 'required_without:email|nullable|string|max:50',
+            'password' => 'required|string|min:6',
+        ],
+        [
+            'email.required_without' => 'email or phone is required',
+            'email.email'            => 'email is invalid',
+            'email.max'              => 'email must not exceed 250 characters',
+
+            'phone.required_without' => 'phone or email is required',
+            'phone.string'           => 'phone must be a string',
+            'phone.max'              => 'phone must not exceed 50 characters',
+
+            'password.required' => 'password is required',
+            'password.min'      => 'password must be at least 6 characters',
+        ]
+    );
+
+       if ($validator->fails()) {
+            return  $validator->errors();
+        }
         // البحث إما بالإيميل أو الهاتف
         $user = User::query()
             ->when($request->email, fn($q) => $q->where('email', $request->email))
@@ -75,9 +99,54 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function registerUser(RegisterRequest $request)
+    public function registerUser(Request $request)
     {
         //dd($request->all());
+
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name'     => 'required|string|max:250',
+                'email'    => 'required_without:phone|nullable|email|max:250|unique:users,email',
+                'phone'    => [
+                    'required_without:email',
+                    'nullable',
+                    'string',
+                    'max:50',
+                    // لو عندك soft deletes في users استخدم whereNull:
+                    Rule::unique('users', 'phone')->whereNull('deleted_at'),
+                ],
+                'password' => 'required|string|min:6',
+                'role'     => 'required|in:admin,technical,customer',
+                'state'    => 'required|string|max:250',
+                'area'     => 'required|string|max:250',
+            ],
+            [
+                'name.required' => 'name is required',
+
+                'email.required_without' => 'email or phone is required',
+                'email.email'            => 'email is invalid',
+                'email.unique'           => 'email must be unique',
+
+                'phone.required_without' => 'phone or email is required',
+                'phone.unique'           => 'phone must be unique',
+
+                'password.required' => 'password is required',
+                'password.min'      => 'password must be at least 6 characters',
+
+                'role.required' => 'role is required',
+                'role.in'       => 'role must be one of: admin, technical, customer',
+
+                'state.required' => 'state is required',
+                'area.required'  => 'area is required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return  $validator->errors();
+        }
+
         $user = DB::transaction(function () use ($request) {
             return User::create([
                 'name'     => $request->name,
