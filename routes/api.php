@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\MainControllers\AreaController;
 use App\Http\Controllers\MainControllers\OtpController;
 use App\Http\Controllers\MainControllers\ServiceController;
+use App\Http\Controllers\MainControllers\StateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainControllers\ServiceCategoryController;
@@ -44,6 +46,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/services',               [ServiceController::class, 'index']);
     Route::get('/services/{id}',          [ServiceController::class, 'show']);
 
+    Route::get('/get_states',              [StateController::class, 'index']);
+
+    Route::get('/get_areas',               [AreaController::class, 'index']);
+    Route::get('/states/{stateId}/areas', [AreaController::class, 'byState']); // مناطق محافظة
 
 
     // إدارة (أدمن فقط)
@@ -69,5 +75,24 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/services/{id}/restore',     [ServiceController::class, 'restore']);
         Route::delete('/services/{id}/force',     [ServiceController::class, 'forceDelete']);
         ######################### End Services #########################
+
+
+        ######################### States #########################
+        Route::post('/add_states',             [StateController::class, 'store']);
+        Route::put('/states/{id}',         [StateController::class, 'update']);
+        Route::delete('/states/{id}',      [StateController::class, 'destroy']);
+        Route::get('/states-deleted',      [StateController::class, 'deleted']);
+        Route::get('/states-all',          [StateController::class, 'allWithTrashed']);
+        Route::post('/states/{id}/restore', [StateController::class, 'restore']);
+        ######################### End States #########################
+
+        ######################### Areas #########################
+        Route::post('/add_areas',              [AreaController::class, 'store']);
+        Route::put('/areas/{id}',          [AreaController::class, 'update']);
+        Route::delete('/areas/{id}',       [AreaController::class, 'destroy']);
+        Route::get('/areas-deleted',       [AreaController::class, 'deleted']);
+        Route::get('/areas-all',           [AreaController::class, 'allWithTrashed']);
+        Route::post('/areas/{id}/restore', [AreaController::class, 'restore']);
+        ######################### End Areas #########################
     });
 });
