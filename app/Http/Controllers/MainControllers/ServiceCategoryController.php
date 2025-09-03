@@ -8,23 +8,24 @@ use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\ServiceCategories\StoreServiceCategoryRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Http\JsonResponse;
+
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceCategoryController extends Controller
 {
-    // GET /api/service-categories
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
-        // فلترة اختيارية
         $q = ServiceCategory::query()
             ->when($request->boolean('only_active'), fn($x) => $x->where('is_active', true))
+            ->with(['services' => function ($s) use ($request) {
+                $s->when($request->boolean('only_active_services'), fn($y) => $y->where('is_active', true))
+                    ->orderBy('name');
+            }])
             ->orderBy('sort_order')
             ->orderBy('name');
 
-        // إرجاع كل النتائج بدون paging
         $items = $q->get();
 
         return response()->json(['data' => $items]);
@@ -161,9 +162,11 @@ class ServiceCategoryController extends Controller
     // LIST WITH TRASHED: عرض الكل بما فيهم المحذوفات
     public function indexWithTrashed(Request $request)
     {
+
         $items = ServiceCategory::withTrashed()
             ->orderBy('sort_order')->orderBy('name')
             ->get();
+
 
         return response()->json(['data' => $items]);
     }
