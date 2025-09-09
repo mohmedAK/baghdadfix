@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\MainControllers\AreaController;
+use App\Http\Controllers\MainControllers\CouponController;
+use App\Http\Controllers\MainControllers\OrderServiceController;
 use App\Http\Controllers\MainControllers\OtpController;
 use App\Http\Controllers\MainControllers\ServiceController;
 use App\Http\Controllers\MainControllers\StateController;
@@ -50,6 +52,23 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/get_areas',               [AreaController::class, 'index']);
     Route::get('/states/{stateId}/areas', [AreaController::class, 'byState']); // مناطق محافظة
+    Route::get('/get_coupons',            [CouponController::class, 'index']);
+    // تطبيق كوبون على طلب
+    Route::post('/coupons/apply',     [CouponController::class, 'apply']);
+
+
+
+    // قراءة
+    Route::get('/get_orders',              [OrderServiceController::class, 'index']);     // مع فلاتر
+    Route::get('/get_order/{id}',         [OrderServiceController::class, 'show']);
+
+    // العميل ينشئ الطلب ويوافق/يرفض
+    Route::post('/add_order',             [OrderServiceController::class, 'store']);      // customer
+    Route::post('/order/{id}/approve', [OrderServiceController::class, 'approve']);    // customer
+    Route::post('/order/{id}/reject', [OrderServiceController::class, 'reject']);     // customer
+
+
+
 
 
     // إدارة (أدمن فقط)
@@ -94,5 +113,26 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/areas-all',           [AreaController::class, 'allWithTrashed']);
         Route::post('/areas/{id}/restore', [AreaController::class, 'restore']);
         ######################### End Areas #########################
+
+        ######################### Coupons #########################
+
+        Route::post('/add_coupons',           [CouponController::class, 'store']);
+        Route::put('/coupons/{id}',       [CouponController::class, 'update']);
+        Route::delete('/coupons/{id}',    [CouponController::class, 'destroy']);
+
+        Route::get('/coupons-deleted',    [CouponController::class, 'deleted']);
+        Route::get('/coupons-all',        [CouponController::class, 'allWithTrashed']);
+        Route::post('/coupons/{id}/restore', [CouponController::class, 'restore']);
+        ######################### End Coupons #####################
+
+        ######################### Orders #########################
+        Route::post('/orders/{id}/estimate', [OrderServiceController::class, 'adminEstimate']);         // وضع سعر ابتدائي
+        Route::post('/orders/{id}/assign',   [OrderServiceController::class, 'assignTechnician']);      // تعيين فني
+        Route::post('/orders/{id}/status',   [OrderServiceController::class, 'updateStatus']);          // تحديث الحالة
+        Route::delete('/orders/{id}',        [OrderServiceController::class, 'destroy']);               // Soft Delete
+        Route::get('/orders-deleted',        [OrderServiceController::class, 'deleted']);               // المحذوفات فقط
+        Route::post('/orders/{id}/restore',  [OrderServiceController::class, 'restore']);               // استرجاع
+        ######################### End Orders #########################
+
     });
 });

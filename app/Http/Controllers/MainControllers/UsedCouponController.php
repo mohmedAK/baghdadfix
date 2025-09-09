@@ -3,65 +3,53 @@
 namespace App\Http\Controllers\MainControllers;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\UsedCoupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UsedCouponController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // قائمة عامة مع فلاتر اختيارية
+    public function index(Request $request)
     {
-        //
+        $q = UsedCoupon::query()
+            ->with(['coupon:id,code,discount', 'customer:id,name,phone', 'order:id'])
+            ->when($request->filled('customer_id_fk'), fn($x) => $x->where('customer_id_fk', $request->customer_id_fk))
+            ->when($request->filled('coupon_id_fk'),   fn($x) => $x->where('coupon_id_fk',   $request->coupon_id_fk))
+            ->when($request->filled('order_service_id_fk'), fn($x) => $x->where('order_service_id_fk', $request->order_service_id_fk))
+            ->orderByDesc('used_at');
+
+        return response()->json(['data' => $q->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // استخدامات عميل معيّن
+    public function byCustomer(string $customerId)
     {
-        //
+        $items = UsedCoupon::with(['coupon:id,code,discount', 'order:id'])
+            ->where('customer_id_fk', $customerId)
+            ->orderByDesc('used_at')
+            ->get();
+
+        return response()->json(['data' => $items]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // استخدامات كوبون معيّن
+    public function byCoupon(string $couponId)
     {
-        //
+        $items = UsedCoupon::with(['customer:id,name,phone', 'order:id'])
+            ->where('coupon_id_fk', $couponId)
+            ->orderByDesc('used_at')
+            ->get();
+
+        return response()->json(['data' => $items]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UsedCoupon $usedCoupon)
+    // (اختياري) حذف إداري لسجل الاستخدام
+    // أنصح بعدم الحذف، لكن إن احتجته:
+    public function destroy(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UsedCoupon $usedCoupon)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UsedCoupon $usedCoupon)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UsedCoupon $usedCoupon)
-    {
-        //
+        $row = UsedCoupon::findOrFail($id);
+        $row->delete(); // لو مفعل SoftDeletes، سيكون سوفت
+        return response()->json(['message' => 'usage deleted']);
     }
 }

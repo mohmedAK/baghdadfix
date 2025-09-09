@@ -46,8 +46,7 @@ return new class extends Migration {
             $table->foreign('area_id_fk')->references('id')->on('areas')
                   ->cascadeOnUpdate()->nullOnDelete();
 
-            $table->foreign('admin_initial_by_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->nullOnDelete();
+
         });
 
         // rating ⇢ order_service/user
@@ -104,7 +103,7 @@ return new class extends Migration {
             $table->dropForeign(['assigned_by_admin_id_fk']);
             $table->dropForeign(['state_id_fk']);
             $table->dropForeign(['area_id_fk']);
-            $table->dropForeign(['admin_initial_by_id_fk']);
+
         });
 
         Schema::table('services', function (Blueprint $table) {

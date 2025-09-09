@@ -18,7 +18,7 @@ class OrderService extends Model
         'customer_id_fk', 'service_id_fk',
         'technical_id_fk', 'assigned_by_admin_id_fk', 'assigned_at', 'assignment_note',
         'state_id_fk', 'area_id_fk', 'gps_lat', 'gps_lng',
-        'admin_initial_price', 'admin_initial_by_id_fk', 'admin_initial_at', 'admin_initial_note',
+        'admin_initial_price', 'admin_initial_at', 'admin_initial_note',
         'final_price',
         'description', 'status', 'submit', 'image', 'video',
         'created_at', 'updated_at',
@@ -54,10 +54,7 @@ class OrderService extends Model
         return $this->belongsTo(User::class, 'assigned_by_admin_id_fk');
     }
 
-    public function adminInitialBy()
-    {
-        return $this->belongsTo(User::class, 'admin_initial_by_id_fk');
-    }
+
 
     public function service()
     {

@@ -64,7 +64,7 @@ class DemoDataSeeder extends Seeder
                 'gps_lat' => 33.3152,
                 'gps_lng' => 44.3661,
                 'admin_initial_price' => 50000,
-                'admin_initial_by_id_fk' => 'u1u1u1u1-1111-1111-1111-111111111111',
+
                 'admin_initial_at' => $now,
                 'admin_initial_note' => 'سعر تقديري',
                 'final_price' => 75000,

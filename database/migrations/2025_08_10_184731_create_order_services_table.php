@@ -31,7 +31,6 @@ return new class extends Migration
 
             // السعر الابتدائي من الأدمن
             $table->decimal('admin_initial_price', 12, 2)->nullable();
-            $table->uuid('admin_initial_by_id_fk')->nullable(); // FK
             $table->timestamp('admin_initial_at')->nullable();
             $table->string('admin_initial_note', 500)->nullable();
 
