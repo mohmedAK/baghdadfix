@@ -12,19 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-          $table->uuid('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable()->unique();
-            $table->enum('role', ['admin','technical','customer']);
-            $table->string('state', 250); // نص كما طلبت
-            $table->string('area', 250);  // نص كما طلبت
+            $table->enum('role', ['admin', 'technical', 'customer'])->nullable();
+            $table->string('state', 250)->nullable(); // نص كما طلبت
+            $table->string('area', 250)->nullable();  // نص كما طلبت
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->softDeletes(); // For soft delete functionality
             $table->rememberToken();
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
