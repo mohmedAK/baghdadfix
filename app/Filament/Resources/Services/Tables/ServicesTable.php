@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ServiceCategories\Tables;
+namespace App\Filament\Resources\Services\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -13,7 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class ServiceCategoriesTable
+class ServicesTable
 {
     public static function configure(Table $table): Table
     {
@@ -24,12 +24,11 @@ class ServiceCategoriesTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                ImageColumn::make('image')->disk('public')->square(),
+                  ImageColumn::make('image')->disk('public')->square(),
+                TextColumn::make('category.name')
+                    ->searchable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                TextColumn::make('sort_order')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

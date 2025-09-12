@@ -20,7 +20,9 @@ class ServiceCategoryResource extends Resource
 {
     protected static ?string $model = ServiceCategory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
+
+    // protected static ?string $modelLabel = 'اصناف الخدمة';
 
     public static function form(Schema $schema): Schema
     {
