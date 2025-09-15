@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 class User extends Authenticatable implements MustVerifyEmail
 {
         use HasApiTokens, HasFactory, Notifiable,UUIDTrait, SoftDeletes;
@@ -51,6 +51,22 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+     public function sendPasswordResetNotification($token): void
+    {
+        // عدّل 'admin' لو كان معرف اللوحة لديك مختلفًا
+        $url = url(route('filament.admin.auth.password.reset', [
+            'token' => $token,
+            'email' => $this->getEmailForPasswordReset(),
+        ], false));
+
+        $notification = new ResetPasswordNotification($token);
+
+        // في إصدارات Laravel الحديثة استخدم createUrlUsing (أنسب)،
+        // لكن إن كان المتغير متاحًا لديك فسيعمل السطر التالي:
+        $notification->url = $url;
+
+        $this->notify($notification);
+    }
 
 
     // علاقات مفيدة
