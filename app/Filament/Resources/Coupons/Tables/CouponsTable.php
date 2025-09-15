@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Coupons\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class UsersTable
+class CouponsTable
 {
     public static function configure(Table $table): Table
     {
@@ -20,33 +21,23 @@ class UsersTable
                 TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
-                TextColumn::make('name')
+                TextColumn::make('code')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->searchable(),
-                TextColumn::make('role'),
-                TextColumn::make('state')
-                    ->searchable(),
-                TextColumn::make('area')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
+                TextColumn::make('discount')
+                    ->numeric()
                     ->sortable(),
+                IconColumn::make('is_active')
+                    ->boolean(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
+                TextColumn::make('starts_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                    ->sortable(),
+                TextColumn::make('ends_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 TrashedFilter::make(),

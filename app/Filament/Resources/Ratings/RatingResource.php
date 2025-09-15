@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\Resources\Ratings;
 
-use App\Filament\Resources\Users\Pages\CreateUser;
-use App\Filament\Resources\Users\Pages\EditUser;
-use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\Schemas\UserForm;
-use App\Filament\Resources\Users\Tables\UsersTable;
-use App\Models\User;
+use App\Filament\Resources\Ratings\Pages\CreateRating;
+use App\Filament\Resources\Ratings\Pages\EditRating;
+use App\Filament\Resources\Ratings\Pages\ListRatings;
+use App\Filament\Resources\Ratings\Schemas\RatingForm;
+use App\Filament\Resources\Ratings\Tables\RatingsTable;
+use App\Models\Rating;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,20 +16,20 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UserResource extends Resource
+class RatingResource extends Resource
 {
-    protected static ?string $model = User::class;
+    protected static ?string $model = Rating::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function form(Schema $schema): Schema
     {
-        return UserForm::configure($schema);
+        return RatingForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return UsersTable::configure($table);
+        return RatingsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -42,9 +42,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListUsers::route('/'),
-            'create' => CreateUser::route('/create'),
-            'edit' => EditUser::route('/{record}/edit'),
+            'index' => ListRatings::route('/'),
+            'create' => CreateRating::route('/create'),
+            'edit' => EditRating::route('/{record}/edit'),
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Services\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -20,13 +21,20 @@ class ServicesTable
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label('#')
+                    ->rowIndex()        // per-page index
+                    ->alignCenter()
+                    ->sortable()
                     ->searchable(),
+                ImageColumn::make('image')->disk('public')->square(),
                 TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
-                  ImageColumn::make('image')->disk('public')->square(),
                 TextColumn::make('category.name')
+                    ->sortable()
                     ->searchable(),
+
+
                 IconColumn::make('is_active')
                     ->boolean(),
                 TextColumn::make('deleted_at')
@@ -47,6 +55,7 @@ class ServicesTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

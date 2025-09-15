@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ServiceForm
@@ -15,21 +16,32 @@ class ServiceForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                FileUpload::make('image')
-                    ->label('Service Image')
-                    ->image()                          // يعرض معاينة ويتأكد أنها صورة
-                    ->disk('public')                   // يخزن على قرص public
-                    ->directory('services')  // المسار: storage/app/public/services
-                    ->visibility('public'),            // لتكون قابلة للعرض عبر /storage
-                Select::make('service_category_id_fk')
-                    ->label('Service Category')
-                    ->options(ServiceCategory::query()->pluck('name', 'id'))
-                    ->searchable(),
+                Section::make('Basic Information')
+                    ->description('Enter the basic details of the service.')
+                    ->schema([
+                        TextInput::make('name')->rules('string|max:20')
+                            ->required(),
+                        Select::make('service_category_id_fk')
+                            ->label('Service Category')
+                            ->relationship('category', 'name')
+                            // ->searchable()
+                            ->required(),
+                    ])->columnSpan(2),
+                Section::make('Meta Data')
+                    ->description('Add Image and activation status.')
+                    ->schema([
+                        FileUpload::make('image')
+                            ->label('Service Image')
+                            ->image()                          // يعرض معاينة ويتأكد أنها صورة
+                            ->disk('public')                   // يخزن على قرص public
+                            ->directory('services')  // المسار: storage/app/public/services
+                            ->visibility('public')
+                            ->required(),            // لتكون قابلة للعرض عبر /storage
 
-                Toggle::make('is_active')
-                    ->required(),
-            ]);
+
+                        Toggle::make('is_active')
+                            ->required(),
+                    ])->columnSpan(1)
+            ])->columns(3);
     }
 }

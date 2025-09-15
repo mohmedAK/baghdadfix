@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Ratings\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -11,7 +11,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class UsersTable
+class RatingsTable
 {
     public static function configure(Table $table): Table
     {
@@ -20,20 +20,14 @@ class UsersTable
                 TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
-                TextColumn::make('name')
+                TextColumn::make('order_service_id_fk')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
+                TextColumn::make('rater_id_fk')
                     ->searchable(),
-                TextColumn::make('phone')
+                TextColumn::make('technical_id_fk')
                     ->searchable(),
-                TextColumn::make('role'),
-                TextColumn::make('state')
-                    ->searchable(),
-                TextColumn::make('area')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
+                TextColumn::make('rate')
+                    ->numeric()
                     ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()

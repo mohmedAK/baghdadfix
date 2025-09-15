@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ServiceCategories;
 use App\Filament\Resources\ServiceCategories\Pages\CreateServiceCategory;
 use App\Filament\Resources\ServiceCategories\Pages\EditServiceCategory;
 use App\Filament\Resources\ServiceCategories\Pages\ListServiceCategories;
+use App\Filament\Resources\ServiceCategories\RelationManagers\ServicesRelationManager;
 use App\Filament\Resources\ServiceCategories\Schemas\ServiceCategoryForm;
 use App\Filament\Resources\ServiceCategories\Tables\ServiceCategoriesTable;
 use App\Models\ServiceCategory;
@@ -37,7 +38,7 @@ class ServiceCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 
