@@ -38,7 +38,7 @@ class ServiceCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            ServicesRelationManager::class
         ];
     }
 

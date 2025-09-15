@@ -20,7 +20,10 @@ class ServiceCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label('#')
+                    ->rowIndex()        // per-page index
+                    ->alignCenter()
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
