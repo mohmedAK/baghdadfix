@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class ServiceForm
 {
@@ -23,7 +24,7 @@ class ServiceForm
                             ->required(),
                         Select::make('service_category_id_fk')
                             ->label('Service Category')
-                            ->relationship('category', 'name')
+                            ->relationship('category', 'name', modifyQueryUsing: fn(Builder $query) => $query->where('is_active', true))
                             // ->searchable()
                             ->required(),
                     ])->columnSpan(2),
