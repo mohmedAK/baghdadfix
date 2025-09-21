@@ -34,22 +34,34 @@ return new class extends Migration
             $table->timestamp('admin_initial_at')->nullable();
             $table->string('admin_initial_note', 500)->nullable();
 
+            $table->decimal('technician_quote_price', 12, 2)->nullable();
+            $table->string('technician_quote_note', 500)->nullable();
+            $table->dateTime('technician_quote_at')->nullable();
+            $table->dateTime('customer_decided_at')->nullable();
+
             // السعر النهائي (اختياري)
             $table->decimal('final_price', 12, 2)->nullable();
 
             $table->text('description')->nullable();
 
             $table->enum('status', [
-                'created','admin_estimated','assigned','inspecting',
-                'quote_pending','awaiting_customer_approval',
-                'approved','rejected','in_progress','completed','canceled'
+                'created',
+                'admin_estimated',
+                'assigned',
+                'inspecting',
+                'quote_pending',
+                'awaiting_customer_approval',
+                'approved',
+                'rejected',
+                'in_progress',
+                'completed',
+                'canceled'
             ])->default('created');
 
             $table->boolean('submit')->default(false);
 
-            $table->string('image', 1000)->nullable();
-            $table->string('video', 1000)->nullable();
-               $table->softDeletes(); // For soft delete functionality
+
+            $table->softDeletes(); // For soft delete functionality
             $table->timestamps();
         });
     }

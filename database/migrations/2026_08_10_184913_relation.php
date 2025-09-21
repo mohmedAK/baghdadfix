@@ -6,14 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
 
-    public function up(): void {
+    public function up(): void
+    {
 
         // area ⇢ state
         Schema::table('areas', function (Blueprint $table) {
             $table->foreign('state_id_fk')->references('id')->on('states')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
-            $table->unique(['state_id_fk','name'], 'uq_area_state_name');
+            $table->unique(['state_id_fk', 'name'], 'uq_area_state_name');
         });
 
 
@@ -21,44 +22,42 @@ return new class extends Migration {
         // service ⇢ service_category
         Schema::table('services', function (Blueprint $table) {
             $table->foreign('service_category_id_fk')->references('id')->on('service_categories')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
-            $table->unique(['service_category_id_fk','name'], 'uq_service_name_in_category');
+            $table->unique(['service_category_id_fk', 'name'], 'uq_service_name_in_category');
         });
 
         // order_service ⇢ user/service/state/area
         Schema::table('order_services', function (Blueprint $table) {
             $table->foreign('customer_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
             $table->foreign('service_id_fk')->references('id')->on('services')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
             $table->foreign('technical_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->nullOnDelete();
+                ->cascadeOnUpdate()->nullOnDelete();
 
             $table->foreign('assigned_by_admin_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->nullOnDelete();
+                ->cascadeOnUpdate()->nullOnDelete();
 
             $table->foreign('state_id_fk')->references('id')->on('states')
-                  ->cascadeOnUpdate()->nullOnDelete();
+                ->cascadeOnUpdate()->nullOnDelete();
 
             $table->foreign('area_id_fk')->references('id')->on('areas')
-                  ->cascadeOnUpdate()->nullOnDelete();
-
-
+                ->cascadeOnUpdate()->nullOnDelete();
         });
 
         // rating ⇢ order_service/user
         Schema::table('ratings', function (Blueprint $table) {
             $table->foreign('order_service_id_fk')->references('id')->on('order_services')
-                  ->cascadeOnUpdate()->cascadeOnDelete();
+                ->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->foreign('rater_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
             $table->foreign('technical_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+                ->cascadeOnUpdate()->restrictOnDelete();
 
             $table->unique('order_service_id_fk', 'uq_rating_order');
         });
@@ -66,19 +65,26 @@ return new class extends Migration {
         // used_coupon ⇢ coupon/user/order_service
         Schema::table('used_coupons', function (Blueprint $table) {
             $table->foreign('coupon_id_fk')->references('id')->on('coupons')
-                  ->cascadeOnUpdate()->cascadeOnDelete();
+                ->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->foreign('customer_id_fk')->references('id')->on('users')
-                  ->cascadeOnUpdate()->nullOnDelete();
+                ->cascadeOnUpdate()->nullOnDelete();
 
             $table->foreign('order_service_id_fk')->references('id')->on('order_services')
-                  ->cascadeOnUpdate()->nullOnDelete();
+                ->cascadeOnUpdate()->nullOnDelete();
 
-            $table->unique(['customer_id_fk','coupon_id_fk'], 'uq_user_coupon_once');
+            $table->unique(['customer_id_fk', 'coupon_id_fk'], 'uq_user_coupon_once');
+        });
+
+
+        Schema::table('order_service_media', function (Blueprint $table) {
+            $table->foreign('order_service_id_fk')->references('id')->on('order_services')->cascadeOnDelete();
+            $table->foreign('uploaded_by_user_id_fk')->references('id')->on('users')->nullOnDelete();
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
 
         // Drop constraints in reverse order
 
@@ -103,7 +109,6 @@ return new class extends Migration {
             $table->dropForeign(['assigned_by_admin_id_fk']);
             $table->dropForeign(['state_id_fk']);
             $table->dropForeign(['area_id_fk']);
-
         });
 
         Schema::table('services', function (Blueprint $table) {
@@ -116,6 +121,11 @@ return new class extends Migration {
         Schema::table('areas', function (Blueprint $table) {
             $table->dropUnique('uq_area_state_name');
             $table->dropForeign(['state_id_fk']);
+        });
+
+        Schema::table('order_service_media', function (Blueprint $table) {
+            $table->dropForeign(['order_service_id_fk']);
+            $table->dropForeign(['uploaded_by_user_id_fk']);
         });
     }
 };

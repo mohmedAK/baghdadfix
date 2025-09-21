@@ -43,27 +43,27 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make(
-        $request->all(),
-        [
-            'email'    => 'required_without:phone|nullable|email|max:250',
-            'phone'    => 'required_without:email|nullable|string|max:50',
-            'password' => 'required|string|min:6',
-        ],
-        [
-            'email.required_without' => 'email or phone is required',
-            'email.email'            => 'email is invalid',
-            'email.max'              => 'email must not exceed 250 characters',
+            $request->all(),
+            [
+                'email'    => 'required_without:phone|nullable|email|max:250',
+                'phone'    => 'required_without:email|nullable|string|max:50',
+                'password' => 'required|string|min:6',
+            ],
+            [
+                'email.required_without' => 'email or phone is required',
+                'email.email'            => 'email is invalid',
+                'email.max'              => 'email must not exceed 250 characters',
 
-            'phone.required_without' => 'phone or email is required',
-            'phone.string'           => 'phone must be a string',
-            'phone.max'              => 'phone must not exceed 50 characters',
+                'phone.required_without' => 'phone or email is required',
+                'phone.string'           => 'phone must be a string',
+                'phone.max'              => 'phone must not exceed 50 characters',
 
-            'password.required' => 'password is required',
-            'password.min'      => 'password must be at least 6 characters',
-        ]
-    );
+                'password.required' => 'password is required',
+                'password.min'      => 'password must be at least 6 characters',
+            ]
+        );
 
-       if ($validator->fails()) {
+        if ($validator->fails()) {
             return  $validator->errors();
         }
         // البحث إما بالإيميل أو الهاتف

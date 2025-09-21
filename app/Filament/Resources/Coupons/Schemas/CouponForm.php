@@ -13,15 +13,11 @@ class CouponForm
     {
         return $schema
             ->components([
-                TextInput::make('code')
-                    ->required(),
-                TextInput::make('discount')
-                    ->required()
-                    ->numeric(),
-                Toggle::make('is_active')
-                    ->required(),
+                TextInput::make('code')->unique(ignoreRecord: true)->required()->maxLength(250),
+                TextInput::make('discount')->numeric()->minValue(0)->maxValue(100)->suffix('%')->required(),
+                Toggle::make('is_active')->default(true),
                 DateTimePicker::make('starts_at'),
                 DateTimePicker::make('ends_at'),
-            ]);
+            ])->columns(2);
     }
 }

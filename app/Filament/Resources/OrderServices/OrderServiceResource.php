@@ -5,7 +5,12 @@ namespace App\Filament\Resources\OrderServices;
 use App\Filament\Resources\OrderServices\Pages\CreateOrderService;
 use App\Filament\Resources\OrderServices\Pages\EditOrderService;
 use App\Filament\Resources\OrderServices\Pages\ListOrderServices;
+use App\Filament\Resources\OrderServices\Pages\ViewOrderService;
+use App\Filament\Resources\OrderServices\RelationManagers\MediaRelationManager;
+use App\Filament\Resources\OrderServices\RelationManagers\RatingsRelationManager;
+use App\Filament\Resources\OrderServices\RelationManagers\UsedCouponsRelationManager;
 use App\Filament\Resources\OrderServices\Schemas\OrderServiceForm;
+use App\Filament\Resources\OrderServices\Schemas\OrderServiceInfolist;
 use App\Filament\Resources\OrderServices\Tables\OrderServicesTable;
 use App\Models\OrderService;
 use BackedEnum;
@@ -27,6 +32,11 @@ class OrderServiceResource extends Resource
         return OrderServiceForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return OrderServiceInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return OrderServicesTable::configure($table);
@@ -35,7 +45,9 @@ class OrderServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RatingsRelationManager::class,
+            UsedCouponsRelationManager::class,
+            MediaRelationManager::class
         ];
     }
 
@@ -44,6 +56,7 @@ class OrderServiceResource extends Resource
         return [
             'index' => ListOrderServices::route('/'),
             'create' => CreateOrderService::route('/create'),
+            'view' => ViewOrderService::route('/{record}'),
             'edit' => EditOrderService::route('/{record}/edit'),
         ];
     }

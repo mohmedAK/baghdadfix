@@ -18,26 +18,11 @@ class CouponsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
-                TextColumn::make('code')
-                    ->searchable(),
-                TextColumn::make('discount')
-                    ->numeric()
-                    ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('starts_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('ends_at')
-                    ->dateTime()
-                    ->sortable(),
+                TextColumn::make('code')->searchable()->sortable(),
+                TextColumn::make('discount')->suffix('%')->sortable(),
+                IconColumn::make('is_active')->boolean(),
+                TextColumn::make('starts_at')->dateTime()->since()->toggleable(),
+                TextColumn::make('ends_at')->dateTime()->since()->toggleable(),
             ])
             ->filters([
                 TrashedFilter::make(),
