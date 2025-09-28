@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrderServices\RelationManagers;
 
+use Filament\Actions\Action;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -19,11 +20,13 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MediaRelationManager extends RelationManager
 {
@@ -43,33 +46,41 @@ class MediaRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
+            ->defaultSort('sort_order')
             ->columns([
-                TextColumn::make('type')
-                    ->badge()
-                    ->color(fn(string $t) => $t === 'image' ? 'success' : 'info'),
-
-                // thumbnail للصورة
-                ImageColumn::make('path')
-                    ->disk(fn($r) => $r->disk ?? 'public')
-                    ->square()
-                    ->visible(fn($r) => $r->type === 'image'),
-
-                // رابط الملف (صورة/فيديو)
-                TextColumn::make('url')
-                    ->label('URL')
-                    ->url(fn($r) => Storage::disk($r->disk ?? 'public')->url($r->path), true)
-                    ->openUrlInNewTab()
-                    ->copyable(),
-
+                ViewColumn::make('preview')
+                    ->label('Preview')
+                    ->view('filament.tables.media-thumb')
+                    ->grow(false) // لا يتمدّد مع الصف
+                    ->extraAttributes([
+                        // نثبت عرض خلية العمود نفسها كي لا تتمدّد
+                        'style' => 'width:136px;min-width:136px;max-width:136px;',
+                    ]),
                 TextColumn::make('sort_order')->sortable(),
-                TextColumn::make('created_at')->since(),
-                TextColumn::make('deleted_at')->since()->label('Deleted')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->since()->sortable(),
             ])
+
             ->filters([
                 TrashedFilter::make(),
             ])
             ->headerActions([])
-            ->recordActions([])
+            ->recordActions([
+                Action::make('preview')
+                    ->label('Preview')
+                    ->icon('heroicon-o-eye')
+                    ->modalHeading('Media preview')
+                    ->modalWidth('7xl')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close')
+                    ->modalContent(
+                        /** @param OrderServiceMedia $record */
+                        fn($record) => view('filament.modals.media-preview', [
+                            'isImage' => $record->type === 'image',
+                            'url'     => Storage::disk('public')->url($record->file_path),
+                            'mime'    => $record->mime,
+                        ])
+                    ),
+            ])
             ->toolbarActions([])
 
             ->modifyQueryUsing(fn(Builder $query) => $query

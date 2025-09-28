@@ -58,16 +58,33 @@ Route::middleware('auth:api')->group(function () {
 
 
 
-    // قراءة
-    Route::get('/get_orders',              [OrderServiceController::class, 'index']);     // مع فلاتر
-    Route::get('/get_order/{id}',         [OrderServiceController::class, 'show']);
+      // Orders: list & show
+    Route::get('/orders',        [OrderServiceController::class, 'index']);
+    Route::get('/orders/{id}',   [OrderServiceController::class, 'show']);
 
-    // العميل ينشئ الطلب ويوافق/يرفض
-    Route::post('/add_order',             [OrderServiceController::class, 'store']);      // customer
-    Route::post('/order/{id}/approve', [OrderServiceController::class, 'approve']);    // customer
-    Route::post('/order/{id}/reject', [OrderServiceController::class, 'reject']);     // customer
+    // Customer: create order
+    Route::post('/add_order',       [OrderServiceController::class, 'store']);
 
+    // Upload media (image/video) to an order (customer/assigned tech/admin)
+    Route::post('/orders/{id}/media', [OrderServiceController::class, 'addMedia']);
 
+    // Technician: submit quote
+    Route::post('/orders/{id}/technician-quote', [OrderServiceController::class, 'technicianQuote']);
+
+    // Admin: estimate/assign/final price/update status
+    Route::post('/orders/{id}/estimate',    [OrderServiceController::class, 'adminEstimate']);      // admin initial price
+    Route::post('/orders/{id}/assign',      [OrderServiceController::class, 'assignTechnician']);   // assign tech
+    Route::post('/orders/{id}/final-price', [OrderServiceController::class, 'setFinalPrice']);      // set final price => awaiting_customer_approval
+    Route::post('/orders/{id}/status',      [OrderServiceController::class, 'updateStatus']);       // generic status change (admin)
+
+    // Customer: approve / reject
+    Route::post('/orders/{id}/approve', [OrderServiceController::class, 'approve']);
+    Route::post('/orders/{id}/reject',  [OrderServiceController::class, 'reject']);
+
+    // Soft delete / trash / restore
+    Route::delete('/orders/{id}',       [OrderServiceController::class, 'destroy']);
+    Route::get('/orders-deleted',       [OrderServiceController::class, 'deleted']);
+    Route::post('/orders/{id}/restore', [OrderServiceController::class, 'restore']);
 
 
 

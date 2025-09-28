@@ -17,7 +17,7 @@ class OrderServiceMedia extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'order_service_id_fk', 'type', 'path', 'disk', 'mime',
+        'order_service_id_fk', 'type', 'file_path', 'disk', 'mime',
         'size', 'sort_order', 'uploaded_by_user_id_fk', 'duration_seconds',
     ];
 

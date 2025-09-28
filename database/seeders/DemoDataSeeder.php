@@ -12,55 +12,81 @@ class DemoDataSeeder extends Seeder
     {
         $now = Carbon::now();
 
+        // IDs ثابتة بصيغة UUID v4
+        $stateBaghdad   = '5d2f1a14-8e42-4d8c-9a3e-2f1a7d8c9b1e';
+
+        $areaKarrada    = 'c8b3f2a7-1d5e-4e84-8c61-7f9b2cb4a0d2';
+        $areaMansour    = '9f1c2d3e-7a6b-4b1f-a2c3-58d9e1f0ab34';
+
+        $adminId        = '2a4c7d8e-3f12-4c56-b789-0a1b2c3d4e5f';
+        $techId         = 'f0a1b2c3-4d5e-4f60-9abc-1234567890ab';
+        $customerId     = '7e9a2b1c-3d4f-4a6b-8c9d-0f1e2d3c4b5a';
+
+        $catBuildId     = 'a3b4c5d6-7890-4abc-8def-0123456789ab';
+        $catElectricId  = '0bb3a3dd-2f67-480a-9d21-7a2bc3d4e5f6';
+
+        $servicePaintId = 'd1e2f3a4-b5c6-4d78-98ab-0c1d2e3f4a5b';
+        $serviceWireId  = '34ac12ef-56b7-4c89-a012-3b4c5d6e7f80';
+
+        $couponWelcome  = '6a7b8c9d-0e1f-4a23-b456-c7890a1b2c3d';
+
         // 1) States
         DB::table('states')->insert([
-            ['id' => '11111111-1111-1111-1111-111111111111', 'name' => 'بغداد', 'is_active' => 1, 'sort_order' => 1],
-
+            ['id' => $stateBaghdad, 'name' => 'بغداد', 'is_active' => 1, 'sort_order' => 1],
         ]);
 
         // 2) Areas
         DB::table('areas')->insert([
-            ['id' => 'aaaa1111-1111-1111-1111-aaaaaaaaaaaa', 'state_id_fk' => '11111111-1111-1111-1111-111111111111', 'name' => 'الكرادة', 'is_active' => 1, 'sort_order' => 1],
-            ['id' => 'bbbb2222-2222-2222-2222-bbbbbbbbbbbb', 'state_id_fk' => '11111111-1111-1111-1111-111111111111', 'name' => 'المنصور', 'is_active' => 1, 'sort_order' => 2],
-
+            ['id' => $areaKarrada, 'state_id_fk' => $stateBaghdad, 'name' => 'الكرادة', 'is_active' => 1, 'sort_order' => 1],
+            ['id' => $areaMansour, 'state_id_fk' => $stateBaghdad, 'name' => 'المنصور', 'is_active' => 1, 'sort_order' => 2],
         ]);
 
         // 3) Users
         DB::table('users')->insert([
-            ['id' => 'u1u1u1u1-1111-1111-1111-111111111111', 'name' => 'Admin One', 'email' => 'admin@admin.com', 'phone' => '07700000001', 'role' => 'admin', 'state' => 'بغداد', 'area' => 'الكرادة', 'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 'u2u2u2u2-2222-2222-2222-222222222222', 'name' => 'Tech One', 'email' => 'tech1@tech.com', 'phone' => '07700000002', 'role' => 'technical', 'state' => 'بغداد', 'area' => 'المنصور', 'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now],
-            ['id' => 'u3u3u3u3-3333-3333-3333-333333333333', 'name' => 'Customer One', 'email' => '', 'phone' => '07700000003', 'role' => 'customer', 'state' => 'البصرة', 'area' => 'الزبير', 'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now],
+            [
+                'id' => $adminId, 'name' => 'Admin One', 'email' => 'admin@admin.com',
+                'phone' => '07700000001', 'role' => 'admin', 'state' => 'بغداد', 'area' => 'الكرادة',
+                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'id' => $techId, 'name' => 'Tech One', 'email' => 'tech1@tech.com',
+                'phone' => '07700000002', 'role' => 'technical', 'state' => 'بغداد', 'area' => 'المنصور',
+                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'id' => $customerId, 'name' => 'Customer One', 'email' => '',
+                'phone' => '07700000003', 'role' => 'customer', 'state' => 'البصرة', 'area' => 'الزبير',
+                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+            ],
         ]);
-
 
         // 5) Service Categories
         DB::table('service_categories')->insert([
-            ['id' => 'scat1111-1111-1111-1111-scat11111111', 'name' => 'ترميم وبناء', 'image' => null, 'is_active' => 1, 'sort_order' => 1],
-            ['id' => 'scat2222-2222-2222-2222-scat22222222', 'name' => 'أعمال كهرباء', 'image' => null, 'is_active' => 1, 'sort_order' => 2],
+            ['id' => $catBuildId,    'name' => 'ترميم وبناء',  'image' => null, 'is_active' => 1, 'sort_order' => 1],
+            ['id' => $catElectricId, 'name' => 'أعمال كهرباء', 'image' => null, 'is_active' => 1, 'sort_order' => 2],
         ]);
 
         // 6) Services
         DB::table('services')->insert([
-            ['id' => 'serv1111-1111-1111-1111-serv11111111', 'name' => 'دهان جدران', 'image' => null, 'service_category_id_fk' => 'scat1111-1111-1111-1111-scat11111111', 'is_active' => 1],
-            ['id' => 'serv2222-2222-2222-2222-serv22222222', 'name' => 'تمديد أسلاك', 'image' => null, 'service_category_id_fk' => 'scat2222-2222-2222-2222-scat22222222', 'is_active' => 1],
+            ['id' => $servicePaintId, 'name' => 'دهان جدران', 'image' => null, 'service_category_id_fk' => $catBuildId,   'is_active' => 1],
+            ['id' => $serviceWireId,  'name' => 'تمديد أسلاك', 'image' => null, 'service_category_id_fk' => $catElectricId,'is_active' => 1],
         ]);
 
-        // 7) Order Services
+        // 7) Order Services (اختياري – اتركه فارغ الآن)
 
-
-        // 8) Ratings
+        // 8) Ratings (اختياري)
         // DB::table('ratings')->insert([
-        //     ['id' => 'rate1111-1111-1111-1111-rate11111111', 'order_service_id_fk' => 'ord11111-1111-1111-1111-ord111111111', 'rater_id_fk' => 'u3u3u3u3-3333-3333-3333-333333333333', 'technical_id_fk' => 'u2u2u2u2-2222-2222-2222-222222222222', 'rate' => 5, 'comment' => 'خدمة ممتازة', 'created_at' => $now],
+        //     ['id' => '12ab34cd-56ef-4980-8a1b-2c3d4e5f6071', 'order_service_id_fk' => '...', 'rater_id_fk' => $customerId, 'technical_id_fk' => $techId, 'rate' => 5, 'comment' => 'خدمة ممتازة', 'created_at' => $now],
         // ]);
 
         // 9) Coupons
         DB::table('coupons')->insert([
-            ['id' => 'coup1111-1111-1111-1111-coup11111111', 'code' => 'WELCOME10', 'discount' => 10, 'is_active' => 1, 'starts_at' => $now, 'ends_at' => $now->copy()->addDays(30)],
+            ['id' => $couponWelcome, 'code' => 'WELCOME10', 'discount' => 10, 'is_active' => 1, 'starts_at' => $now, 'ends_at' => $now->copy()->addDays(30)],
         ]);
 
-        // 10) Used Coupons
+        // 10) Used Coupons (اختياري)
         // DB::table('used_coupons')->insert([
-        //     ['id' => 'used1111-1111-1111-1111-used11111111', 'customer_id_fk' => 'u3u3u3u3-3333-3333-3333-333333333333', 'coupon_id_fk' => 'coup1111-1111-1111-1111-coup11111111', 'order_service_id_fk' => 'ord11111-1111-1111-1111-ord111111111', 'used_at' => $now],
+        //     ['id' => '98ba76dc-5432-4f10-9e8d-7c6b5a4f3e21', 'customer_id_fk' => $customerId, 'coupon_id_fk' => $couponWelcome, 'order_service_id_fk' => '...', 'used_at' => $now],
         // ]);
     }
 }
