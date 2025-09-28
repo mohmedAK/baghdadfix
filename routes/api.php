@@ -69,7 +69,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/orders/{id}/media', [OrderServiceController::class, 'addMedia']);
 
     // Technician: submit quote
-    Route::post('/orders/{id}/technician-quote', [OrderServiceController::class, 'technicianQuote']);
+    Route::post('/edit_order_by_technician', [OrderServiceController::class, 'technicianQuote']);
 
     // Admin: estimate/assign/final price/update status
     Route::post('/orders/{id}/estimate',    [OrderServiceController::class, 'adminEstimate']);      // admin initial price

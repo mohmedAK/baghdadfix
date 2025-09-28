@@ -54,8 +54,8 @@ class OrderServiceController extends Controller
                 'area:id,name',
                 'media:id,order_service_id_fk,type,file_path,is_primary,sort_order',
             ])
-            ->when($role === 'customer', fn (Builder $b) => $b->where('customer_id_fk', $user->id))
-            ->when($role === 'technical', fn (Builder $b) => $b->where('technical_id_fk', $user->id));
+            ->when($role === 'customer', fn(Builder $b) => $b->where('customer_id_fk', $user->id))
+            ->when($role === 'technical', fn(Builder $b) => $b->where('technical_id_fk', $user->id));
 
         if ($status = $request->query('status'))      $q->where('status', $status);
         if ($service = $request->query('service_id')) $q->where('service_id_fk', $service);
@@ -102,8 +102,8 @@ class OrderServiceController extends Controller
             'description'   => ['nullable', 'string'],
 
             // ميديا اختيارية عند الإنشاء
-             'images.*'      => ['file', 'mimes:jpg,jpeg,png,webp', 'max:20480'], // 20MB
-             'videos.*'      => ['file', 'mimetypes:video/mp4,video/quicktime,video/x-msvideo', 'max:51200'], // 50MB
+            'images.*'      => ['file', 'mimes:jpg,jpeg,png,webp', 'max:20480'], // 20MB
+            'videos.*'      => ['file', 'mimetypes:video/mp4,video/quicktime,video/x-msvideo', 'max:51200'], // 50MB
         ]);
 
         $order = OrderService::create([
@@ -168,10 +168,10 @@ class OrderServiceController extends Controller
         abort_unless($this->canView($order, $user), 403);
 
         $data = $request->validate([
-            'type'      => ['required', Rule::in(['image','video'])],
+            'type'      => ['required', Rule::in(['image', 'video'])],
             'file'      => ['required', 'file', 'max:51200'], // عدّل السعة حسب الحاجة
-            'is_primary'=> ['nullable', 'boolean'],
-            'sort_order'=> ['nullable', 'integer'],
+            'is_primary' => ['nullable', 'boolean'],
+            'sort_order' => ['nullable', 'integer'],
         ]);
 
         $dir  = $data['type'] === 'image' ? 'orders/images' : 'orders/videos';
@@ -200,30 +200,30 @@ class OrderServiceController extends Controller
     /* ===================== Technician: quote ===================== */
 
     // POST /orders/{id}/technician-quote
-    public function technicianQuote(Request $request, string $id)
+    public function technicianQuote(Request $request)
     {
         $user  = $request->user();
-        $order = OrderService::findOrFail($id);
+        $order = OrderService::findOrFail($request->id);
 
         abort_unless($this->userRole($user) === 'technical' && $order->technical_id_fk === $user->id, 403, 'Only assigned technician can submit a quote.');
 
-        if (! in_array($order->status, ['assigned', 'inspecting'])) {
-            abort(422, 'Order is not in an inspectable state.');
+        if (($order->status->value == 'assigned') || ($order->status->value == 'inspecting')) {
+
+            $data = $request->validate([
+                'price' => ['required', 'numeric', 'min:0'],
+                'note'  => ['nullable', 'string', 'max:500'],
+            ]);
+
+            $order->update([
+                'technician_quote_price' => $data['price'],
+                'technician_quote_note'  => $data['note'] ?? null,
+                'technician_quote_at'    => now(),
+                'status'                 => 'quote_pending',
+            ]);
+
+            return response()->json(['message' => 'Quote submitted', 'data' => $order->fresh()], 200);
         }
-
-        $data = $request->validate([
-            'price' => ['required', 'numeric', 'min:0'],
-            'note'  => ['nullable', 'string', 'max:500'],
-        ]);
-
-        $order->update([
-            'technician_quote_price' => $data['price'],
-            'technician_quote_note'  => $data['note'] ?? null,
-            'technician_quote_at'    => now(),
-            'status'                 => 'quote_pending',
-        ]);
-
-        return response()->json(['message' => 'Quote submitted', 'data' => $order->fresh()], 200);
+        abort(422, 'Order is not in an inspectable state.');
     }
 
     /* ===================== Admin: estimate/assign/final ===================== */
@@ -310,9 +310,17 @@ class OrderServiceController extends Controller
 
         $data = $request->validate([
             'status' => ['required', Rule::in([
-                'created','admin_estimated','assigned','inspecting',
-                'quote_pending','awaiting_customer_approval',
-                'approved','rejected','in_progress','completed','canceled',
+                'created',
+                'admin_estimated',
+                'assigned',
+                'inspecting',
+                'quote_pending',
+                'awaiting_customer_approval',
+                'approved',
+                'rejected',
+                'in_progress',
+                'completed',
+                'canceled',
             ])],
         ]);
 
@@ -331,7 +339,7 @@ class OrderServiceController extends Controller
 
         abort_unless($this->userRole($user) === 'customer' && $order->customer_id_fk === $user->id, 403);
 
-        if ($order->status !== 'awaiting_customer_approval') {
+        if ($order->status->value !== 'awaiting_customer_approval') {
             abort(422, 'Order is not awaiting customer approval.');
         }
 

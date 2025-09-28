@@ -92,15 +92,20 @@ class OrderService extends Model
     // علاقات إدارية
     public function technical()
     {
-        return $this->belongsTo(User::class, 'technical_id_fk');
+        return $this->belongsTo(User::class, 'technical_id_fk')
+            ->where('role', 'technical'); // أو ->where('role', UserRoleEnum::Technical->value)
     }
     public function assignedBy()
     {
-        return $this->belongsTo(User::class, 'assigned_by_admin_id_fk');
+        return $this->belongsTo(User::class, 'assigned_by_admin_id_fk')
+            ->where('role', 'admin');
+        // أو مع enum:
+        // ->where('role', UserRoleEnum::Admin->value);
     }
     public function adminInitialBy()
     {
-        return $this->belongsTo(User::class, 'admin_initial_by_id_fk');
+        return $this->belongsTo(User::class, 'assigned_by_admin_id_fk')
+            ->where('role', 'admin');
     }
 
     // ميديا متعددة
