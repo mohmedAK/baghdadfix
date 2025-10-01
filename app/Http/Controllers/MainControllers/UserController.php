@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\Auth\RegisterRequest; // تأكد من وجود هذا الـ Request
+use App\Models\OrderService;
+use App\Models\Rating;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
@@ -64,28 +66,84 @@ class UserController extends Controller
         );
 
         if ($validator->fails()) {
-            return  $validator->errors();
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-        // البحث إما بالإيميل أو الهاتف
+
+        // Find by email or phone
         $user = User::query()
-            ->when($request->email, fn($q) => $q->where('email', $request->email))
-            ->when($request->phone, fn($q) => $q->where('phone', $request->phone))
+            ->when($request->filled('email'), fn($q) => $q->where('email', $request->email))
+            ->when($request->filled('phone'), fn($q) => $q->where('phone', $request->phone))
             ->first();
 
-        // التحقق من كلمة المرور
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        // إنشاء التوكن (Passport)
+        // Passport token
         $token = $user->createToken('api')->accessToken;
 
+        $extra = [];
+        // dd($user->role);
+        // If the logged in user is a technician, include his orders & ratings
+        if ($user->role->value === 'technical') {
+            // All orders assigned to this technician
+            $orders = OrderService::query()
+                ->where('technical_id_fk', $user->id)
+                ->with([
+                    // include small related info (adjust as you like)
+                    'customer:id,name',
+                    'service:id,name',
+                    'state:id,name',
+                    'area:id,name',
+                ])
+                ->select([
+                    'id',
+                    'customer_id_fk',
+                    'service_id_fk',
+                    'state_id_fk',
+                    'area_id_fk',
+                    'description',
+                    'status',
+                    'submit',
+                    'admin_initial_price',
+                    'final_price',
+                    'assigned_at',
+                    'created_at',
+                    'updated_at',
+                    'technical_id_fk',
+                    'gps_lat',
+                    'gps_lng',
+                ])
+                ->latest('created_at')
+                ->get();
 
-        return response()->json([
+            // All ratings for this technician
+            $ratings = Rating::query()
+                ->where('technical_id_fk', $user->id)
+                ->with([
+                    'rater:id,name',
+                    'order:id'  // or 'orderService:id' depending on your relation name
+                ])
+                ->select(['id', 'order_service_id_fk', 'rater_id_fk', 'technical_id_fk', 'rate', 'comment', 'created_at'])
+                ->latest('created_at')
+                ->get();
+
+            // Some quick aggregates (optional)
+            $extra = [
+                'orders'  => $orders,
+                'ratings' => [
+                    'items'      => $ratings,
+                    'count'      => $ratings->count(),
+                    'avg_rate'   => (float) number_format((float) $ratings->avg('rate'), 2, '.', ''),
+                ],
+            ];
+        }
+
+        return response()->json(array_merge([
             'message' => 'Logged in successfully',
             'user'    => $user,
             'token'   => $token,
-        ], 200);
+        ], $extra), 200);
     }
 
     public function logout()
