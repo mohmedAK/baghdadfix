@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MainControllers;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\OrderService;
 use App\Models\OrderServiceMedia;
@@ -350,6 +351,43 @@ class OrderServiceController extends Controller
         ]);
 
         return response()->json(['message' => 'Approved', 'data' => $order->fresh()]);
+    }
+
+    public function completeByTechnician(Request $request, string $id)
+    {
+        $user  = $request->user();
+        $order = OrderService::findOrFail($id);
+
+        // Only the assigned technician can complete the order
+        abort_unless(
+            $this->userRole($user) === 'technical' && $order->technical_id_fk === $user->id,
+            403,
+            'Only the assigned technician can complete this order.'
+        );
+
+        // Acceptable states to mark as completed (tweak to your flow)
+        $current = is_object($order->status) ? $order->status->value : $order->status;
+        if (! in_array($current, ['in_progress', 'approved', 'awaiting_customer_approval'], true)) {
+            abort(422, 'Order is not in a completable state.');
+        }
+
+        // (Optional) accept a short completion note
+        $data = $request->validate([
+            'note' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $order->update([
+            // If you use enums:
+            'status' => OrderStatus::Completed,
+            //'status'               => 'completed',
+            'technician_done_note' => $data['note'] ?? null,  // add column if you want to store it
+            'completed_at'         => now(),                  // make sure this column exists
+        ]);
+
+        return response()->json([
+            'message' => 'Order marked as completed.',
+            'data'    => $order->fresh(),
+        ]);
     }
 
     public function reject(Request $request, string $id)

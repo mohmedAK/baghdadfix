@@ -66,6 +66,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Customer: approve / reject
     Route::post('/orders/{id}/approve', [OrderServiceController::class, 'approve']);
+    Route::post('/orders/{id}/complete', [OrderServiceController::class, 'completeByTechnician']);
     Route::post('/orders/{id}/reject',  [OrderServiceController::class, 'reject']);
 
     // Soft delete / trash / restore

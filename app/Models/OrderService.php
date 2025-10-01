@@ -52,7 +52,7 @@ class OrderService extends Model
         'final_price',
     ];
 
-    public $timestamps = false; // عندك created_at/updated_at أعمدة يدوية
+    public $timestamps = true; // عندك created_at/updated_at أعمدة يدوية
 
     protected $casts = [
         'assigned_at' => 'datetime',
