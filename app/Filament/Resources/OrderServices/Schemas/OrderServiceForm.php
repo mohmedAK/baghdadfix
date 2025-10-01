@@ -83,19 +83,24 @@ class OrderServiceForm
 
                         TextInput::make('gps_lat')->disabled()->dehydrated(false),
                         TextInput::make('gps_lng')->disabled()->dehydrated(false),
-                        // Map preview (read-only)
-                        // ViewField::make('map')
-                        //     ->label('Map')
-                        //     ->view('filament/forms/components/order-map')   // blade view path
-                        //     ->columnSpanFull()
-                        //     ->viewData([
-                        //         // Fallback to Baghdad center if null
-                        //         'lat'  => fn(Get $get) => $get('gps_lat') ?: 33.3152,
-                        //         'lng'  => fn(Get $get) => $get('gps_lng') ?: 44.3661,
-                        //         'zoom' => 14,
-                        //     ]),
+
                     ]),
 
+
+                Section::make('Location')
+                    ->columns(3)
+                    ->schema([
+                        ViewField::make('map')
+                            ->label('Map')
+                            ->view('filament/forms/components/order-map')
+                            ->columnSpanFull(),
+
+                        // Links to open in external map apps
+                        ViewField::make('map-links')
+                            ->view('filament/forms/components/map-links')
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
                 // أقسام تعديل الأدمن فقط
 
 
