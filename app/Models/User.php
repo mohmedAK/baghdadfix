@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Traits\UUIDTrait;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,9 +16,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, UUIDTrait, SoftDeletes;
+
+
+
+
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +51,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // عدّل هذا الشرط حسب حاجتك
+        return in_array($this->role, [UserRole::Admin, UserRole::Editor]);
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -94,6 +106,10 @@ class User extends Authenticatable implements MustVerifyEmail
     //     return $this->hasMany(Otp::class, 'user_id_fk');
     // }
 
+    public function isEditor(): bool
+    {
+        return $this->role === \App\Enums\UserRole::Editor;
+    }
     // طلبات أنشأها كمستخدم زبون
     public function customerOrders()
     {

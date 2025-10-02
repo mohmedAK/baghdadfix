@@ -44,19 +44,52 @@ class DemoDataSeeder extends Seeder
         // 3) Users
         DB::table('users')->insert([
             [
-                'id' => $adminId, 'name' => 'Admin One', 'email' => 'admin@admin.com',
-                'phone' => '07700000001', 'role' => 'admin', 'state' => 'بغداد', 'area' => 'الكرادة',
-                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+                'id' => $adminId,
+                'name' => 'Admin One',
+                'email' => 'admin@admin.com',
+                'phone' => '07700000001',
+                'role' => 'admin',
+                'state' => 'بغداد',
+                'area' => 'الكرادة',
+                'password' => bcrypt('password'),
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
-                'id' => $techId, 'name' => 'Tech One', 'email' => 'tech1@tech.com',
-                'phone' => '07700000002', 'role' => 'technical', 'state' => 'بغداد', 'area' => 'المنصور',
-                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+                'id'       => '5d2f1a14-8e42-4d8c-9a3e-2f1a7d8c9b1e',
+                'name'     => 'Editor One',
+                'email'    => 'editor@editor.com',
+                'phone'    => '07700000005',
+                'role'     => 'editor',
+                'state'    => 'بغداد',
+                'area'     => 'الكرادة',
+                'password' => bcrypt('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
-                'id' => $customerId, 'name' => 'Customer One', 'email' => '',
-                'phone' => '07700000003', 'role' => 'customer', 'state' => 'البصرة', 'area' => 'الزبير',
-                'password' => bcrypt('password'), 'created_at' => $now, 'updated_at' => $now,
+                'id' => $techId,
+                'name' => 'Tech One',
+                'email' => '',
+                'phone' => '07700000002',
+                'role' => 'technical',
+                'state' => 'بغداد',
+                'area' => 'المنصور',
+                'password' => bcrypt('password'),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'id' => $customerId,
+                'name' => 'Customer One',
+                'email' => '',
+                'phone' => '07700000003',
+                'role' => 'customer',
+                'state' => 'البصرة',
+                'area' => 'الزبير',
+                'password' => bcrypt('password'),
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
         ]);
 
@@ -69,7 +102,7 @@ class DemoDataSeeder extends Seeder
         // 6) Services
         DB::table('services')->insert([
             ['id' => $servicePaintId, 'name' => 'دهان جدران', 'image' => null, 'service_category_id_fk' => $catBuildId,   'is_active' => 1],
-            ['id' => $serviceWireId,  'name' => 'تمديد أسلاك', 'image' => null, 'service_category_id_fk' => $catElectricId,'is_active' => 1],
+            ['id' => $serviceWireId,  'name' => 'تمديد أسلاك', 'image' => null, 'service_category_id_fk' => $catElectricId, 'is_active' => 1],
         ]);
 
         // 7) Order Services (اختياري – اتركه فارغ الآن)

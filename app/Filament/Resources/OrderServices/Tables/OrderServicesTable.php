@@ -13,6 +13,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -20,9 +21,18 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+
+use Filament\Tables\Components\Tabs\Tab;
+
+
+
+
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class OrderServicesTable
 {
@@ -79,6 +89,47 @@ class OrderServicesTable
                 Filter::make('approved')
                     ->label('Approved by customer')
                     ->query(fn(Builder $q) => $q->where('submit', true)),
+
+                SelectFilter::make('status')
+                    ->options(\App\Enums\OrderStatus::options())
+                    ->multiple(),
+
+                // Date range on created_at
+                Filter::make('date_range')
+                    ->form([
+                        DatePicker::make('from')->label('From'),
+                        DatePicker::make('to')->label('To'),
+                    ])
+                    ->query(function (EloquentBuilder $query, array $data): EloquentBuilder {
+                        return $query
+                            ->when(
+                                $data['from'] ?? null,
+                                fn(EloquentBuilder $q, $date) =>
+                                $q->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['to'] ?? null,
+                                fn(EloquentBuilder $q, $date) =>
+                                $q->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $badges = [];
+                        if (! empty($data['from'])) $badges[] = 'From: ' . \Carbon\Carbon::parse($data['from'])->toFormattedDateString();
+                        if (! empty($data['to']))   $badges[] = 'To: '   . \Carbon\Carbon::parse($data['to'])->toFormattedDateString();
+                        return $badges;
+                    }),
+
+                // Customer approved?
+                TernaryFilter::make('submit')
+                    ->label('Customer approved')
+                    ->queries(
+                        true: fn(EloquentBuilder $q) => $q->where('submit', true),
+                        false: fn(EloquentBuilder $q) => $q->where('submit', false),
+                        blank: fn(EloquentBuilder $q) => $q, // no constraint
+                    ),
+
+
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -139,6 +190,7 @@ class OrderServicesTable
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ;
     }
 }

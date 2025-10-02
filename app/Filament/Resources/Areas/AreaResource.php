@@ -15,13 +15,14 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class AreaResource extends Resource
 {
     protected static ?string $model = Area::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
+  protected static string | UnitEnum | null $navigationGroup = 'Management';
     public static function form(Schema $schema): Schema
     {
         return AreaForm::configure($schema);

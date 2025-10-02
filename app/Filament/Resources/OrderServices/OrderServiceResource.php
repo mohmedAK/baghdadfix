@@ -20,12 +20,19 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class OrderServiceResource extends Resource
 {
     protected static ?string $model = OrderService::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
+
+    // protected static ?string $navigationLabel = 'Custom Navigation Label';
+
+
+
+    protected static string | UnitEnum | null $navigationGroup = 'Management';
 
     public static function form(Schema $schema): Schema
     {
