@@ -24,6 +24,7 @@ class StateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMap;
   protected static string | UnitEnum | null $navigationGroup = 'Management';
+  protected static ?int $navigationSort = 2;
     public static function form(Schema $schema): Schema
     {
         return StateForm::configure($schema);

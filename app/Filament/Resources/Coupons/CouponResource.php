@@ -23,6 +23,8 @@ class CouponResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
   protected static string | UnitEnum | null $navigationGroup = 'Management';
+
+  protected static ?int $navigationSort = 7;
     public static function form(Schema $schema): Schema
     {
         return CouponForm::configure($schema);

@@ -23,6 +23,8 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
     protected static string | UnitEnum | null $navigationGroup = 'Management';
+
+    protected static ?int $navigationSort = 4;
     public static function form(Schema $schema): Schema
     {
         return ServiceForm::configure($schema);

@@ -24,6 +24,8 @@ class ServiceCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
   protected static string | UnitEnum | null $navigationGroup = 'Management';
+
+  protected static ?int $navigationSort = 3;
     // protected static ?string $modelLabel = 'اصناف الخدمة';
 
     public static function form(Schema $schema): Schema

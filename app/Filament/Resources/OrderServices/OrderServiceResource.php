@@ -34,6 +34,8 @@ class OrderServiceResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Management';
 
+    protected static ?int $navigationSort = 5;
+
     public static function form(Schema $schema): Schema
     {
         return OrderServiceForm::configure($schema);

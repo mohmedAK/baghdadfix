@@ -23,6 +23,8 @@ class RatingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
   protected static string | UnitEnum | null $navigationGroup = 'Management';
+
+  protected static ?int $navigationSort = 8;
     public static function form(Schema $schema): Schema
     {
         return RatingForm::configure($schema);

@@ -22,7 +22,9 @@ class AreaResource extends Resource
     protected static ?string $model = Area::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
-  protected static string | UnitEnum | null $navigationGroup = 'Management';
+    protected static string | UnitEnum | null $navigationGroup = 'Management';
+
+    protected static ?int $navigationSort = 1;
     public static function form(Schema $schema): Schema
     {
         return AreaForm::configure($schema);
