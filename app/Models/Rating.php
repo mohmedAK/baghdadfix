@@ -6,18 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Traits\UUIDTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Rating extends Model
 {
-    use UUIDTrait,SoftDeletes;
+    use UUIDTrait, SoftDeletes;
 
     protected $table = 'ratings';
     protected $keyType = 'string';
     public $incrementing = false;
-    public $timestamps = false; // عندك created_at فقط
+    public $timestamps = true; // عندك created_at فقط
 
     protected $fillable = [
-        'order_service_id_fk', 'rater_id_fk', 'technical_id_fk',
-        'rate', 'comment', 'created_at',
+        'order_service_id_fk',
+        'rater_id_fk',
+        'technical_id_fk',
+        'rate',
+        'comment',
+        'created_at',
     ];
 
     protected $casts = [
@@ -38,5 +43,19 @@ class Rating extends Model
     public function technical()
     {
         return $this->belongsTo(User::class, 'technical_id_fk');
+    }
+
+
+
+    public function orderService()
+    {
+        return $this->belongsTo(\App\Models\OrderService::class, 'order_service_id_fk');
+    }
+
+
+
+    public function technician()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'technical_id_fk');
     }
 }

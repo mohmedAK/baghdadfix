@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainControllers\RatingController;
 use App\Http\Controllers\MainControllers\AreaController;
 use App\Http\Controllers\MainControllers\CouponController;
 use App\Http\Controllers\MainControllers\OrderServiceController;
@@ -27,6 +28,22 @@ Route::middleware('auth:api')->get('/users', [UserController::class, 'index']);
 
 
 Route::middleware('auth:api')->group(function () {
+
+     // إنشاء/تحديث تقييم لطلب
+    Route::post('/orders/{order}/rate', [RatingController::class, 'storeOrUpdate']);
+
+    // إظهار تقييم الطلب (إن وُجد)
+    Route::get('/orders/{order}/rating', [RatingController::class, 'showForOrder']);
+
+    // جميع تقييمات فنّي
+    Route::get('/technicians/{technician}/ratings', [RatingController::class, 'listForTechnician']);
+
+    // ملخّص تقييمات فنّي (المعدّل + العدد)
+    Route::get('/technicians/{technician}/rating-summary', [RatingController::class, 'summaryForTechnician']);
+
+
+
+
 
     // عرض (للكل)
     Route::get('/service-categories', [ServiceCategoryController::class, 'index']);
