@@ -21,6 +21,7 @@ class DemoDataSeeder extends Seeder
         $adminId        = '2a4c7d8e-3f12-4c56-b789-0a1b2c3d4e5f';
         $techId         = 'f0a1b2c3-4d5e-4f60-9abc-1234567890ab';
         $customerId     = '7e9a2b1c-3d4f-4a6b-8c9d-0f1e2d3c4b5a';
+        $editorId       = '5d2f1a14-8e42-4d8c-9a3e-2f1a7d8c9b1h';
 
         $catBuildId     = 'a3b4c5d6-7890-4abc-8def-0123456789ab';
         $catElectricId  = '0bb3a3dd-2f67-480a-9d21-7a2bc3d4e5f6';
@@ -56,7 +57,7 @@ class DemoDataSeeder extends Seeder
                 'updated_at' => $now,
             ],
             [
-                'id'       => '5d2f1a14-8e42-4d8c-9a3e-2f1a7d8c9b1e',
+                'id'       => $editorId,
                 'name'     => 'Editor One',
                 'email'    => 'editor@editor.com',
                 'phone'    => '07700000005',
@@ -70,7 +71,7 @@ class DemoDataSeeder extends Seeder
             [
                 'id' => $techId,
                 'name' => 'Tech One',
-                'email' => '',
+                'email' => null,
                 'phone' => '07700000002',
                 'role' => 'technical',
                 'state' => 'بغداد',
@@ -82,7 +83,7 @@ class DemoDataSeeder extends Seeder
             [
                 'id' => $customerId,
                 'name' => 'Customer One',
-                'email' => '',
+                'email' => null,
                 'phone' => '07700000003',
                 'role' => 'customer',
                 'state' => 'البصرة',
